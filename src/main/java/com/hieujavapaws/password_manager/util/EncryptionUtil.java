@@ -12,9 +12,9 @@ public class EncryptionUtil {
     private static String getSecretKey() {
         Dotenv dotenv = Dotenv.load();
         String key = dotenv.get("ENCRYPTION_SECRET_KEY");
-        if (key == null || key.length() != 16) {
+        if (key == null || key.length() <= 16) {
             throw new RuntimeException("Invalid or missing encryption secret key. " +
-                    "Ensure it's set in the .env file and 16 characters long.");
+                    "Ensure it's set in the .env file and at least 16 characters long.");
         }
         return key;
     }

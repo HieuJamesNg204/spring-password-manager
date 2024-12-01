@@ -25,6 +25,11 @@ public class PasswordController {
         return ResponseEntity.ok(passwordService.getPasswordsByApp(appId));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PasswordDTO> getPasswordById(@PathVariable Long id) {
+        return ResponseEntity.ok(passwordService.getPasswordById(id));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<PasswordDTO> updatePassword(
             @PathVariable Long id,

@@ -57,6 +57,23 @@ public class PasswordService {
                 .collect(Collectors.toList());
     }
 
+    public PasswordDTO getPasswordById(Long id) {
+        Password password = passwordRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Password not found"));
+
+        PasswordDTO dto = new PasswordDTO();
+        dto.setId(password.getId());
+        dto.setUsername(password.getUsername());
+        try {
+            dto.setPassword(EncryptionUtil.decrypt(password.getPassword()));
+        } catch (Exception e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+        dto.setNote(password.getNote());
+        dto.setAppId(password.getApp().getId());
+        return dto;
+    }
+
     public PasswordDTO updatePassword(Long id, PasswordDTO passwordDTO) {
         Password existingPassword = passwordRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Password not found"));

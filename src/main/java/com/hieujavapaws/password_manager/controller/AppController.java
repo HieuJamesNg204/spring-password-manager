@@ -30,7 +30,7 @@ public class AppController {
         return ResponseEntity.ok(appService.updateApp(id, appDTO));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteApp(@PathVariable Long id) {
         appService.deleteApp(id);
         return ResponseEntity.noContent().build();
