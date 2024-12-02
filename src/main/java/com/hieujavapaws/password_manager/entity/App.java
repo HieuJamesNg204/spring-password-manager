@@ -15,6 +15,9 @@ public class App {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "url", nullable = false, unique = true, length = 500)
     private String url;
 }

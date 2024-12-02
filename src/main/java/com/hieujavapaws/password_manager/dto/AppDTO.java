@@ -8,6 +8,9 @@ import lombok.Data;
 public class AppDTO {
     private Long id;
 
+    @NotBlank(message = "Name is required")
+    private String name;
+
     @NotBlank(message = "URL is required")
     @Size(max = 500, message = "URL must not exceed 500 characters")
     private String url;
