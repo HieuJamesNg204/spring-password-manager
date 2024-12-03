@@ -3,6 +3,7 @@ package com.hieujavapaws.password_manager.service;
 import com.hieujavapaws.password_manager.dto.PasswordDTO;
 import com.hieujavapaws.password_manager.entity.App;
 import com.hieujavapaws.password_manager.entity.Password;
+import com.hieujavapaws.password_manager.exception.ResourceNotFoundException;
 import com.hieujavapaws.password_manager.repository.AppRepository;
 import com.hieujavapaws.password_manager.repository.PasswordRepository;
 import com.hieujavapaws.password_manager.util.EncryptionUtil;
@@ -20,7 +21,7 @@ public class PasswordService {
 
     public PasswordDTO createPassword(PasswordDTO passwordDTO) {
         App app = appRepository.findById(passwordDTO.getAppId())
-                .orElseThrow(() -> new RuntimeException("App not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("App not found"));
 
         Password password = new Password();
 
@@ -40,6 +41,9 @@ public class PasswordService {
     }
 
     public List<PasswordDTO> getPasswordsByApp(Long appId) {
+        appRepository.findById(appId)
+                .orElseThrow(() -> new ResourceNotFoundException("App not found"));
+
         return passwordRepository.findByAppId(appId).stream()
                 .map(password -> {
                     PasswordDTO dto = new PasswordDTO();
@@ -59,7 +63,7 @@ public class PasswordService {
 
     public PasswordDTO getPasswordById(Long id) {
         Password password = passwordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Password not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Password not found"));
 
         PasswordDTO dto = new PasswordDTO();
         dto.setId(password.getId());
@@ -76,11 +80,11 @@ public class PasswordService {
 
     public PasswordDTO updatePassword(Long id, PasswordDTO passwordDTO) {
         Password existingPassword = passwordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Password not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Password not found"));
 
         if (!existingPassword.getApp().getId().equals(passwordDTO.getAppId())) {
             App newApp = appRepository.findById(passwordDTO.getAppId())
-                    .orElseThrow(() -> new RuntimeException("App not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("App not found"));
             existingPassword.setApp(newApp);
         }
 
@@ -100,6 +104,8 @@ public class PasswordService {
     }
 
     public void deletePassword(Long id) {
+        passwordRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Password not found"));
         passwordRepository.deleteById(id);
     }
 }
