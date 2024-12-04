@@ -21,6 +21,7 @@ public class AppService {
             throw new DuplicateResourceException("URL already exists");
         }
         App app = new App();
+        app.setName(appDTO.getName());
         app.setUrl(appDTO.getUrl());
         App savedApp = appRepository.save(app);
 
@@ -33,6 +34,7 @@ public class AppService {
                 .map(app -> {
                     AppDTO dto = new AppDTO();
                     dto.setId(app.getId());
+                    dto.setName(app.getName());
                     dto.setUrl(app.getUrl());
                     return dto;
                 })
@@ -48,6 +50,7 @@ public class AppService {
             throw new DuplicateResourceException("URL already exists");
         }
 
+        existingApp.setName(appDTO.getName());
         existingApp.setUrl(appDTO.getUrl());
         App updatedApp = appRepository.save(existingApp);
 
