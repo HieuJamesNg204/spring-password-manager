@@ -21,8 +21,17 @@ public class AppController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AppDTO>> getAllApps() {
-        return ResponseEntity.ok(appService.getAllApps());
+    public ResponseEntity<List<AppDTO>> getAllApps(@RequestParam(value = "name", required = false) String name) {
+        if (name != null) {
+            return ResponseEntity.ok(appService.searchAppsByName(name));
+        } else {
+            return ResponseEntity.ok(appService.getAllApps());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AppDTO> getAppById(@PathVariable Long id) {
+        return ResponseEntity.ok(appService.getAppById(id));
     }
 
     @PutMapping("/{id}")

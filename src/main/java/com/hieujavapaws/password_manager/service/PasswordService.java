@@ -108,4 +108,8 @@ public class PasswordService {
                 .orElseThrow(() -> new ResourceNotFoundException("Password not found"));
         passwordRepository.deleteById(id);
     }
+
+    public void deletePasswordsByAppId(Long appId) {
+        passwordRepository.deleteByAppId(appId);
+    }
 }

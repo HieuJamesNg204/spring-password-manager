@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface PasswordRepository extends JpaRepository<Password, Long> {
     List<Password> findByAppId(Long appId);
+    void deleteByAppId(Long appId);
 }

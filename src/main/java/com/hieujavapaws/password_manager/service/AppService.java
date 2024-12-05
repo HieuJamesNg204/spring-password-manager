@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AppService {
     private final AppRepository appRepository;
+    private final PasswordService passwordService;
 
     public AppDTO createApp(AppDTO appDTO) {
         if (appRepository.existsByUrl(appDTO.getUrl())) {
@@ -31,6 +32,29 @@ public class AppService {
 
     public List<AppDTO> getAllApps() {
         return appRepository.findAll().stream()
+                .map(app -> {
+                    AppDTO dto = new AppDTO();
+                    dto.setId(app.getId());
+                    dto.setName(app.getName());
+                    dto.setUrl(app.getUrl());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public AppDTO getAppById(Long id) {
+        App app = appRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("App not found"));
+
+        AppDTO dto = new AppDTO();
+        dto.setId(app.getId());
+        dto.setName(app.getName());
+        dto.setUrl(app.getUrl());
+        return dto;
+    }
+
+    public List<AppDTO> searchAppsByName(String name) {
+        return appRepository.searchByNameContainingIgnoreCase(name).stream()
                 .map(app -> {
                     AppDTO dto = new AppDTO();
                     dto.setId(app.getId());
@@ -59,8 +83,8 @@ public class AppService {
     }
 
     public void deleteApp(Long id) {
-        appRepository.findById(id)
+        App app = appRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("App not found"));
-        appRepository.deleteById(id);
+        appRepository.delete(app);
     }
 }
